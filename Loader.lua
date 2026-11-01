@@ -1,12 +1,4 @@
--- Shift Universal loader v2
-local function status(message)
-    warn("[Shift Loader] " .. message)
-    pcall(function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Shift Universal", Text = message, Duration = 12
-        })
-    end)
-end
+-- Shift Universal loader v3 | No on-screen notifications
 local success, failure = xpcall(function()
     if not game:IsLoaded() then game.Loaded:Wait() end
     assert(type(loadstring) == "function", "loadstring unavailable")
@@ -25,4 +17,4 @@ local success, failure = xpcall(function()
 end, function(err)
     return tostring(err)
 end)
-if not success then status("ERROR: " .. tostring(failure)) end
+if not success then warn("[Shift Loader] " .. tostring(failure)) end
