@@ -4,7 +4,7 @@ local success, failure = xpcall(function()
     assert(type(loadstring) == "function", "loadstring unavailable")
     local files = {
         [94102028993104] = "Mushroom.lua",
-        [140149493280576] = "StealAForest.lua",
+        [140149493280576] = "Forest.lua",
     }
     local file = files[game.PlaceId]
     assert(file, "Unsupported PlaceId: " .. tostring(game.PlaceId))
