@@ -1,40 +1,30 @@
-if not game:IsLoaded() then
-    game.Loaded:Wait()
+-- Shift Universal loader v2
+local function status(message)
+    warn("[Shift Loader] " .. message)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Shift Universal", Text = message, Duration = 12
+        })
+    end)
 end
-
-local BaseURL =
-    "https://raw.githubusercontent.com/ShiftWrlds/ShiftUniver/main/"
-
-local Games = {
-    [94102028993104] = "Games/Mushrooming.lua",
-    [140149493280576] = "Games/StealAForest.lua",
-}
-
-local ScriptPath = Games[game.PlaceId]
-
-if not ScriptPath then
-    warn("Shift Universal: Unsupported PlaceId " .. game.PlaceId)
-    return
-end
-
-local downloaded, source = pcall(function()
-    return game:HttpGet(BaseURL .. ScriptPath)
+local success, failure = xpcall(function()
+    if not game:IsLoaded() then game.Loaded:Wait() end
+    assert(type(loadstring) == "function", "loadstring unavailable")
+    local files = {
+        [94102028993104] = "Mushrooming.lua",
+        [140149493280576] = "StealAForest.lua",
+    }
+    local file = files[game.PlaceId]
+    assert(file, "Unsupported PlaceId: " .. tostring(game.PlaceId))
+    status("Downloading " .. file)
+    local url = "https://raw.githubusercontent.com/ShiftWrlds/ShiftUniver/main/" .. file
+    local source = game:HttpGet(url .. "?v=" .. tostring(os.time()))
+    assert(type(source) == "string" and #source > 0, "Empty download")
+    local run, compileError = loadstring(source, "@ShiftUniversal/" .. file)
+    assert(run, "Compile failed: " .. tostring(compileError))
+    status("Running " .. file)
+    run()
+end, function(err)
+    return tostring(err)
 end)
-
-if not downloaded then
-    warn("Shift Universal: Download failed\n" .. tostring(source))
-    return
-end
-
-local run, compileError = loadstring(source)
-
-if not run then
-    warn("Shift Universal: Compile failed\n" .. tostring(compileError))
-    return
-end
-
-local success, runtimeError = pcall(run)
-
-if not success then
-    warn("Shift Universal: Script error\n" .. tostring(runtimeError))
-end
+if not success then status("ERROR: " .. tostring(failure)) end
