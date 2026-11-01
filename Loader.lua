@@ -3,7 +3,7 @@ if not game:IsLoaded() then
 end
 
 local BaseURL =
-    "https://raw.githubusercontent.com/ShiftWrlds/ShiftUniver/main/"
+    "https://raw.githubusercontent.com/ShiftWrlds/ShiftUniver/tree/main/"
 
 local Games = {
     [94102028993104] = "Games/Mushrooming.lua",
